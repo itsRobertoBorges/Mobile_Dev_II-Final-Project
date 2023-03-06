@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		620C35CF29A2ACD400B8609D /* casinoMusic.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 620C35CE29A2ACD400B8609D /* casinoMusic.mp3 */; };
 		62D5986A297DBA2A0023F24D /* war_challengeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D59869297DBA2A0023F24D /* war_challengeApp.swift */; };
 		62D5986C297DBA2A0023F24D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D5986B297DBA2A0023F24D /* ContentView.swift */; };
 		62D5986E297DBA2C0023F24D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 62D5986D297DBA2C0023F24D /* Assets.xcassets */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		620C35CE29A2ACD400B8609D /* casinoMusic.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = casinoMusic.mp3; sourceTree = "<group>"; };
 		62D59866297DBA2A0023F24D /* war-challenge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "war-challenge.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		62D59869297DBA2A0023F24D /* war_challengeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = war_challengeApp.swift; sourceTree = "<group>"; };
 		62D5986B297DBA2A0023F24D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -75,6 +77,7 @@
 		62E46CD9297F603C008AD8E5 /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
+				620C35CE29A2ACD400B8609D /* casinoMusic.mp3 */,
 				62E46CE2297F6B12008AD8E5 /* gameAudioTrimmed.mp3 */,
 				62E46CDE297F636B008AD8E5 /* button.mp3 */,
 			);
@@ -141,6 +144,7 @@
 			files = (
 				62E46CE3297F6B12008AD8E5 /* gameAudioTrimmed.mp3 in Resources */,
 				62D59871297DBA2C0023F24D /* Preview Assets.xcassets in Resources */,
+				620C35CF29A2ACD400B8609D /* casinoMusic.mp3 in Resources */,
 				62E46CDF297F636B008AD8E5 /* button.mp3 in Resources */,
 				62D5986E297DBA2C0023F24D /* Assets.xcassets in Resources */,
 			);

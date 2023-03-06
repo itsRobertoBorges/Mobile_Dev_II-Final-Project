@@ -10,12 +10,47 @@ import AVKit
 
 class AudioPlayer {
     static let shared = AudioPlayer()
-    var player: AVPlayer?
-    func playSound() {
-        let soundURL = Bundle.main.url(forResource: "gameAudioTrimmed", withExtension: "mp3")!
-        let playerItem = AVPlayerItem(url: soundURL)
-        player = AVPlayer(playerItem: playerItem)
-        player?.play()
+    var gamePlayer: AVPlayer?
+    var casinoPlayer: AVPlayer?
+    var isMuted = false
+    
+    func playGameSound() {
+        let gameSoundURL = Bundle.main.url(forResource: "gameAudioTrimmed", withExtension: "mp3")!
+        let playerItem = AVPlayerItem(url: gameSoundURL)
+        if gamePlayer == nil {
+            gamePlayer = AVPlayer(playerItem: playerItem)
+        } else {
+            gamePlayer?.replaceCurrentItem(with: playerItem)
+        }
+        gamePlayer?.volume = isMuted ? 0.0 : 1.0
+        gamePlayer?.play()
+    }
+    
+    func stopGameSound(){
+        gamePlayer?.pause()
+    }
+    
+    func playCasinoMusic() {
+        let casinoSoundURL = Bundle.main.url(forResource: "casinoMusic", withExtension: "mp3")!
+        let playerItem = AVPlayerItem(url: casinoSoundURL)
+        if casinoPlayer == nil {
+            casinoPlayer = AVPlayer(playerItem: playerItem)
+        } else {
+            casinoPlayer?.replaceCurrentItem(with: playerItem)
+        }
+        casinoPlayer?.volume = isMuted ? 0.0 : 1.0
+        casinoPlayer?.play()
+    }
+    
+    func toggleMute() {
+        if let gamePlayer = gamePlayer {
+            gamePlayer.isMuted = !gamePlayer.isMuted
+            isMuted = gamePlayer.isMuted
+        }
+        if let casinoPlayer = casinoPlayer {
+            casinoPlayer.isMuted = !casinoPlayer.isMuted
+            isMuted = casinoPlayer.isMuted
+        }
     }
 }
 
@@ -25,20 +60,44 @@ struct ContentView: View {
     @State private var cpuCard = "card12"
     @State private var playerScore = 0
     @State private var cpuScore = 0
-    @State private var totalCredits = 0
+    @State private var totalCredits = 0 {
+        //audio change for level 2 (100 credits)
+        didSet {
+            if totalCredits == 100 {
+                AudioPlayer.shared.stopGameSound()
+                AudioPlayer.shared.playCasinoMusic()
+            }
+        }
+    }
     @State private var player: AVPlayer?
+    @State private var isMuted = false
+    //original background
     var img = "background"
-    var img2 = ""
-    var img3 = ""
-
-
+    //100+ credits
+    var img1 = "darkbluebackground"
+    //200+ credits
+    var img2 = "blackbackground"
+    
+     func playSound() {
+        AudioPlayer.shared.playGameSound()
+    }
+     
+     func playCasinoSound(){
+        AudioPlayer.shared.playCasinoMusic()
+    }
     
     
     var body: some View {
         NavigationView {
             ZStack {
-                // Background music
-                Image(img).scaledToFill()
+            
+                if totalCredits >= 100 && totalCredits < 200 {
+                    Image(img1).scaledToFill()
+                } else if totalCredits >= 200 {
+                    Image(img2).scaledToFill()
+                } else {
+                        Image(img).scaledToFill()
+                    }
                 Image("logo")
                     .padding(.top, -325.0)
                     .offset(x:0,y:-40)
@@ -52,7 +111,7 @@ struct ContentView: View {
                     
                     let playerRand = Int.random(in: 2...14)
                     let cpuRand = Int.random(in: 2...14)
-                    
+                
                     // Update card
                     playerCard = "card" + String(playerRand)
                     cpuCard = "card" + String(cpuRand)
@@ -89,6 +148,21 @@ struct ContentView: View {
                         .padding(.top, -100.0)
                         .padding(.horizontal, 50.0)
                 }
+                Button(action: {
+                    AudioPlayer.shared.toggleMute()
+                }, label: {
+                    Group {
+                        if AudioPlayer.shared.isMuted {
+                            Image(systemName: "speaker.slash.fill")
+                        } else {
+                            Image(systemName: "speaker.3.fill")
+                        }
+                    }
+                })
+                .padding(.top, 600)
+                .padding(.leading, -150)
+                .foregroundColor(Color.white)
+                .font(.system(size: 30))
                 VStack {
                     Text("Player")
                         .font(.headline)
@@ -112,99 +186,94 @@ struct ContentView: View {
                 VStack {
                     Text("Total Credits: \(totalCredits)").foregroundColor(Color.white)
                         .padding(.top, 280)
+                        .font(.system(size: 20))
                     NavigationLink(destination: InfoPage()) {
                         Image(systemName: "questionmark.square.fill")
                             .padding(.top, 100)
                             .font(.system(size: 30))
                             .foregroundColor(Color.white)
-                        NavigationLink(destination: SoundPage()) {
-                            Image(systemName: "speaker.wave.3.fill")
-                                .padding(.top, 100)
-                                .font(.system(size: 25))
-                                .foregroundColor(Color.white)
-                    }
-                }
+                    NavigationLink(destination: manualPage()) {
+                        Image(systemName: "book.fill")
+                            .padding(.top, 100)
+                            .font(.system(size: 30))
+                            .foregroundColor(Color.white)
+                    }.navigationBarBackButtonHidden(true)
+                   
             }.onAppear(perform: playSound)
-        }
-
-    }.navigationBarBackButtonHidden()
-        
-}
-    func playSound() {
-        AudioPlayer.shared.playSound()
-}
-
-struct InfoPage: View {
-    let name = "Roberto Borges"
-    let stuId = "101255891"
-    let mac = "Macbook Air M2 2022"
-    let version = "14.2"
-    var body: some View {
-        NavigationView {
-            ZStack{
-                Image("background").scaledToFill()
-                Text("Info Page")
-                    .padding(.bottom, 600)
-                    .font(.system(size: 50))
-                    .foregroundColor(Color.white)
-                HStack {
-                    NavigationLink(destination: ContentView()) {
-                        Image(systemName: "arrowshape.turn.up.backward")
-                            .padding(.top, 600)
-                            .padding(.leading, 30)
-                            .font(.system(size: 50))
-                            .foregroundColor(Color.white)
-                    }
-                   // Spacer() // added spacer here
-                    VStack {
-                        Text(" ")
-                        Text("Student: " + name + "\n")
-                            .foregroundColor(Color.white)
-                            .font(.system(size: 25))
-                        Text("Student ID: " + stuId + "\n")
-                            .foregroundColor(Color.white)
-                            .font(.system(size: 25))
-                        Text(" Built on: " + mac + "\n")
-                            .foregroundColor(Color.white)
-                            .font(.system(size: 25))
-                        Text("Xcode version: " + version)
-                            .foregroundColor(Color.white)
-                            .font(.system(size: 25))
-                        Text(" ")
-                    }.background(Color.gray)
-                        .cornerRadius(15)
-                        .padding(.bottom, 60)
-                        .padding(.horizontal, -60)
-                    Spacer()
-                }
-            }
-        }.navigationBarBackButtonHidden()
+                    .onDisappear(perform: {
+                        // Stop playing the background music when the view disappears
+                        player?.pause()
+                })
+             }
+        }.navigationBarHidden(true)
     }
 }
-    struct SoundPage: View {
-        var body: some View{
-            NavigationView{
+   
+ 
+    
+    struct InfoPage: View {
+        let name = "Roberto Borges"
+        let stuId = "101255891"
+        let mac = "Macbook Air M2 2022"
+        let version = "14.2"
+        
+        var body: some View {
+            NavigationView {
                 ZStack{
-                    Image("background").scaledToFill()
-                    Text("Sound")
-                        .foregroundColor(Color.white)
+                    Image("darkgraybackground").scaledToFill()
+                    Text("Info Page")
+                        .padding(.bottom, 600)
                         .font(.system(size: 50))
-                        .padding(.top, -300)
-                    Button {
-                        print("sound off")
-                    } label: {
-                        Text("Sound Off")
-                            .foregroundColor(Color.white)
-                    }
-
+                        .foregroundColor(Color.white)
+                        VStack {
+                            Text(" ")
+                            Text("Student: " + name + "\n")
+                                .foregroundColor(Color.white)
+                                .font(.system(size: 25))
+                            Text("Student ID: " + stuId + "\n")
+                                .foregroundColor(Color.white)
+                                .font(.system(size: 25))
+                            Text(" Built on: " + mac + "\n")
+                                .foregroundColor(Color.white)
+                                .font(.system(size: 25))
+                            Text("Xcode version: " + version)
+                                .foregroundColor(Color.white)
+                                .font(.system(size: 25))
+                            Text(" ")
+                        }.background(Color.gray)
+                            .cornerRadius(15)
+                            .padding(.bottom, 60)
+                            .padding(.horizontal, -60)
                 }
-            }.navigationBarBackButtonHidden()
+                .edgesIgnoringSafeArea(.all)
+                }
+            }
+        }
+    }
+
+    struct manualPage: View {
+        var img = "background"
+    
+        var body: some View {
+            ZStack {
+                Image(img)
+                VStack(spacing: 20) {
+                    
+                    Text("Instructions:")
+                        .font(.title)
+                    Text("Draw your cards, the highest value gets a point. If you get 10 points you get 25 credits, but if you lose you lose 25 credits.")
+                        .multilineTextAlignment(.center)
+                }
+                .padding()
+                .background(Color.white)
+                .foregroundColor(Color.black)
+            }                .edgesIgnoringSafeArea(.all)
+
         }
     }
     
-    struct ContentView_Previews: PreviewProvider {
-        static var previews: some View {
-            ContentView()
-        }
-    }
+        struct ContentView_Previews: PreviewProvider {
+            static var previews: some View {
+                ContentView()
+            }
 }
