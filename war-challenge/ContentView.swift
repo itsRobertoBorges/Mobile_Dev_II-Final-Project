@@ -215,7 +215,7 @@ struct ContentView: View {
         let name = "Roberto Borges"
         let stuId = "101255891"
         let mac = "Macbook Air M2 2022"
-        let version = "14.2"
+        let version = "Version 14.2 (14C18)"
         
         var body: some View {
             NavigationView {
@@ -251,27 +251,49 @@ struct ContentView: View {
         }
     }
 
-    struct manualPage: View {
-        var img = "background"
+struct manualPage: View {
+    var img = "background"
     
-        var body: some View {
-            ZStack {
-                Image(img)
-                VStack(spacing: 20) {
-                    
-                    Text("Instructions:")
-                        .font(.title)
-                    Text("Draw your cards, the highest value gets a point. If you get 10 points you get 25 credits, but if you lose you lose 25 credits.")
-                        .multilineTextAlignment(.center)
+    var body: some View {
+        ZStack {
+            Image(img)
+                .resizable()
+                .scaledToFill()
+                .ignoresSafeArea()
+                .opacity(0.9)
+                .blur(radius: 5)
+                .brightness(-0.15)
+                .contrast(1.1)
+                .saturation(1.5)
+            VStack {
+                Text("Instructions")
+                    .font(.title)
+                    .bold()
+                    .padding(.bottom, 10)
+                VStack(alignment: .leading, spacing: 20) {
+                    Text("Draw a card, the highest card value gets a point.")
+                    Text("If you get 10 points, you earn 25 credits.")
+                    Text("If you lose, you lose 25 credits.")
                 }
-                .padding()
-                .background(Color.white)
-                .foregroundColor(Color.black)
-            }                .edgesIgnoringSafeArea(.all)
-
+                .multilineTextAlignment(.center)
+                .font(.headline)
+                .foregroundColor(.white)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 40)
+                .background(
+                    RoundedRectangle(cornerRadius: 25)
+                        .foregroundColor(.black)
+                        .opacity(0.7)
+                )
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 100)
         }
+        .foregroundColor(.white)
+        .ignoresSafeArea()
     }
-    
+}
+
         struct ContentView_Previews: PreviewProvider {
             static var previews: some View {
                 ContentView()
