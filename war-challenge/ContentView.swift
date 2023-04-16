@@ -60,7 +60,7 @@ struct ContentView: View {
     @State private var cpuCard = "card12"
     @State private var playerScore = 0
     @State private var cpuScore = 0
-    @State private var totalCredits = 0 {
+    @State private var totalCredits = 75 {
         //audio change for level 2 (100 credits)
         didSet {
             if totalCredits == 100 {
@@ -78,11 +78,11 @@ struct ContentView: View {
     //200+ credits
     var img2 = "blackbackground"
     
-     func playSound() {
+    func playSound() {
         AudioPlayer.shared.playGameSound()
     }
-     
-     func playCasinoSound(){
+    
+    func playCasinoSound(){
         AudioPlayer.shared.playCasinoMusic()
     }
     
@@ -90,14 +90,14 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             ZStack {
-            
+                
                 if totalCredits >= 100 && totalCredits < 200 {
                     Image(img1).scaledToFill()
                 } else if totalCredits >= 200 {
                     Image(img2).scaledToFill()
                 } else {
-                        Image(img).scaledToFill()
-                    }
+                    Image(img).scaledToFill()
+                }
                 Image("logo")
                     .padding(.top, -325.0)
                     .offset(x:0,y:-40)
@@ -111,7 +111,7 @@ struct ContentView: View {
                     
                     let playerRand = Int.random(in: 2...14)
                     let cpuRand = Int.random(in: 2...14)
-                
+                    
                     // Update card
                     playerCard = "card" + String(playerRand)
                     cpuCard = "card" + String(cpuRand)
@@ -192,24 +192,24 @@ struct ContentView: View {
                             .padding(.top, 100)
                             .font(.system(size: 30))
                             .foregroundColor(Color.white)
-                    NavigationLink(destination: manualPage()) {
-                        Image(systemName: "book.fill")
-                            .padding(.top, 100)
-                            .font(.system(size: 30))
-                            .foregroundColor(Color.white)
-                    }.navigationBarBackButtonHidden(true)
-                   
-            }.onAppear(perform: playSound)
-                    .onDisappear(perform: {
-                        // Stop playing the background music when the view disappears
-                        player?.pause()
-                })
-             }
-        }.navigationBarHidden(true)
+                        NavigationLink(destination: manualPage()) {
+                            Image(systemName: "book.fill")
+                                .padding(.top, 100)
+                                .font(.system(size: 30))
+                                .foregroundColor(Color.white)
+                        }.navigationBarBackButtonHidden(true)
+                        
+                    }.onAppear(perform: playSound)
+                        .onDisappear(perform: {
+                            // Stop playing the background music when the view disappears
+                            player?.pause()
+                        })
+                }
+            }.navigationBarHidden(true)
+        }
     }
-}
-   
- 
+    
+    
     
     struct InfoPage: View {
         let name = "Roberto Borges"
@@ -223,33 +223,39 @@ struct ContentView: View {
                     Image("darkgraybackground").scaledToFill()
                     Text("Info Page")
                         .padding(.bottom, 600)
-                        .font(.system(size: 50))
+                        .font(.system(size: 50, weight: .bold, design: .rounded))
                         .foregroundColor(Color.white)
-                        VStack {
-                            Text(" ")
-                            Text("Student: " + name + "\n")
-                                .foregroundColor(Color.white)
-                                .font(.system(size: 25))
-                            Text("Student ID: " + stuId + "\n")
-                                .foregroundColor(Color.white)
-                                .font(.system(size: 25))
-                            Text(" Built on: " + mac + "\n")
-                                .foregroundColor(Color.white)
-                                .font(.system(size: 25))
-                            Text("Xcode version: " + version)
-                                .foregroundColor(Color.white)
-                                .font(.system(size: 25))
-                            Text(" ")
-                        }.background(Color.gray)
-                            .cornerRadius(15)
-                            .padding(.bottom, 60)
-                            .padding(.horizontal, -60)
+                    VStack {
+                        Text("")
+                        Text("Student: " + name + "\n")
+                            .foregroundColor(Color.white)
+                            .font(.system(size: 25, weight: .semibold, design: .rounded))
+                            .shadow(color: .black, radius: 2, x: 0.0, y: 0.0)
+                        Text("Student ID: " + stuId + "\n")
+                            .foregroundColor(Color.white)
+                            .font(.system(size: 25, weight: .semibold, design: .rounded))
+                            .shadow(color: .black, radius: 2, x: 0.0, y: 0.0)
+                        Text("Built on: " + mac + "\n")
+                            .foregroundColor(Color.white)
+                            .font(.system(size: 25, weight: .semibold, design: .rounded))
+                            .shadow(color: .black, radius: 2, x: 0.0, y: 0.0)
+                        Text("Xcode version: " + version)
+                            .foregroundColor(Color.white)
+                            .font(.system(size: 25, weight: .semibold, design: .rounded))
+                            .shadow(color: .black, radius: 2, x: 0.0, y: 0.0)
+                        Text(" ")
+                    }
+                    .background(Color.gray)
+                    .cornerRadius(15)
+                    .padding(.bottom, 60)
+                    .padding(.horizontal, -60)
+                    .shadow(color: .black, radius: 4, x: 0.0, y: 0.0)
                 }
                 .edgesIgnoringSafeArea(.all)
-                }
             }
         }
     }
+}
 
 struct manualPage: View {
     var img = "background"
